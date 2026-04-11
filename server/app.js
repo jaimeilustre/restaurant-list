@@ -3,7 +3,7 @@ import cors from 'cors';
 
 const app = express();
 
-const FRONTEND_URL = "http://localhost:3000"; // Change later when deployed
+const FRONTEND_URL = "http://localhost:5173"; // Change later when deployed
 
 // For testing later once frontend is setup
 app.use(
