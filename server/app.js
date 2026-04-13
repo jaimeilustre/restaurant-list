@@ -21,11 +21,21 @@ app.get('/restaurants/:postcode', async (req, res) => {
 	// res.status(200).json({
 	// 	restaurants: [{name: "Test"}]
 	// });
+	// const apiUrl = "https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/";
+	// const { postcode } = req.params;
+	
+	// const response = await axios.get(`${apiUrl}${postcode}`);
+	// res.json(response.data);
+
 	const apiUrl = "https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/";
 	const { postcode } = req.params;
 	
-	const response = await axios.get(`${apiUrl}${postcode}`);
-	res.json(response.data);
+	try {
+		const response = await axios.get(`${apiUrl}${postcode}`);
+		res.json(response.data);
+	} catch (err) {
+		res.status(500).json({ message: "Error getting postcode" });
+	}
 })
 
 
