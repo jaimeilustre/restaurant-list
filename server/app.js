@@ -1,9 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 
-// 1st commit
-import axios from 'axios';
-
 const app = express();
 
 const FRONTEND_URL = "http://localhost:5173"; // Change later when deployed
@@ -21,7 +18,7 @@ app.get('/', (req, res) => {
 
 app.get('/restaurants/:postcode', (req, res) => {
 	res.status(200).json({
-		restaurants: []
+		restaurants: [{name: "Test"}]
 	});
 })
 
