@@ -7,7 +7,11 @@ import axios from 'axios';
 describe('Restaurant List Page', () => {
 	it ('Render header', () => {
 		render(<RestaurantListPage />);
-
 		expect(screen.getByText('List of restaurants')).toBeInTheDocument();
 	});
+
+	it('Shows loading word to test async behaviour', () => {
+		render(<RestaurantListPage />);
+		expect(screen.getByText('Loading...')).toBeInTheDocument();
+	})
 });
