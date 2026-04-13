@@ -1,8 +1,14 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import RestaurantListPage from './RestaurantListPage';
 import axios from 'axios';
+
+vi.mock('axios' , () => ({
+	default: {
+		get: vi.fn()
+	}
+}));
 
 describe('Restaurant List Page', () => {
 	it ('Render header', () => {
@@ -14,4 +20,18 @@ describe('Restaurant List Page', () => {
 		render(<RestaurantListPage />);
 		expect(screen.getByText('Loading...')).toBeInTheDocument();
 	})
+
+	it('Render restaurant names from API', async () => {
+		axios.get.mockResolvedValue({
+			data: {
+				restaurants: [
+					{ id: 1, name: 'Test restaurant'}
+				]
+			}
+		});
+		render(<RestaurantListPage />);
+		const restaurant = await screen.findByText('Test restaurant');
+		expect(restaurant).toBeInTheDocument();
+	})
+
 });
