@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import axios from 'axios';
 
 const app = express();
 
@@ -16,10 +17,15 @@ app.get('/', (req, res) => {
 	res.send("Testing 1, 2, 3");
 });
 
-app.get('/restaurants/:postcode', (req, res) => {
-	res.status(200).json({
-		restaurants: [{name: "Test"}]
-	});
+app.get('/restaurants/:postcode', async (req, res) => {
+	// res.status(200).json({
+	// 	restaurants: [{name: "Test"}]
+	// });
+	const apiUrl = "https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/";
+	const { postcode } = req.params;
+	
+	const response = await axios.get(`${apiUrl}${postcode}`);
+	res.json(response.data);
 })
 
 
