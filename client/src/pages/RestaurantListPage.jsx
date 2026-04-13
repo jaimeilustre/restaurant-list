@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 function RestaurantListPage() {
 
 	const [restaurants, setRestaurants] = useState(null);
+	const { postcode } = useParams(null);
 
 	const getRestaurants = async () => {
 		try {
-			const res = await axios.get('test url');
+			// const res = await axios.get('test url');
+			const res = await axios.get(`http://localhost:8080/restaurants/${postcode}`);
 			setRestaurants(res.data.restaurants);
 		} catch (err) {
 			console.log(err);
