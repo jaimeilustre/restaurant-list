@@ -31,6 +31,13 @@ describe ('GET /restaurants/:postcode', () => {
 		const res = await request(app).get('/restaurants/EC4M7RF');
 		expect(res.body.restaurants.length).toBe(1);
 	})
+
+	it ('Return 500 when API call fails', async () => {
+		axios.get.mockRejectedValue(new Error('API failed'));
+		const res = await request(app).get('/restaurants/EC4M7RF');
+		expect(res.statusCode).toBe(500);
+		expect(res.body.message).toBe('Error getting postcode');
+	})
 });
 
 
