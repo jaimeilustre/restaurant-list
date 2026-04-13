@@ -3,6 +3,7 @@ import { describe, it, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import RestaurantListPage from './RestaurantListPage';
 import axios from 'axios';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 vi.mock('axios' , () => ({
 	default: {
@@ -11,6 +12,7 @@ vi.mock('axios' , () => ({
 }));
 
 describe('Restaurant List Page', () => {
+
 	it ('Render header', () => {
 		render(<RestaurantListPage />);
 		expect(screen.getByText('List of restaurants')).toBeInTheDocument();
@@ -19,7 +21,7 @@ describe('Restaurant List Page', () => {
 	it('Shows loading word to test async behaviour', () => {
 		render(<RestaurantListPage />);
 		expect(screen.getByText('Loading...')).toBeInTheDocument();
-	})
+	});
 
 	it('Render restaurant names from API', async () => {
 		axios.get.mockResolvedValue({
@@ -32,6 +34,25 @@ describe('Restaurant List Page', () => {
 		render(<RestaurantListPage />);
 		const restaurant = await screen.findByText('Test restaurant');
 		expect(restaurant).toBeInTheDocument();
-	})
+	});
+
+	it('Fetch restaurants using inputted postcode', async () => {
+		axios.get.mockResolvedValue({
+			data: { restaurants: [] }
+		});
+
+		render(
+			<MemoryRouter initialEntries={['/restaurants/EC4M7RF']}>
+				<Routes>
+					<Route path="/restaurants/:postcode" element={<RestaurantListPage />} />
+				</Routes>
+			</MemoryRouter>
+		);
+
+		await screen.findByText('Loading...');
+		expect(axios.get).toHaveBeenCalledWith(
+			expect.stringContaining('EC4M7RF')
+		);
+	});
 
 });
