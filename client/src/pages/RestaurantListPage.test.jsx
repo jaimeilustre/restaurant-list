@@ -12,7 +12,7 @@ vi.mock('axios' , () => ({
 }));
 
 describe('Restaurant List Page', () => {
-
+	
 	it ('Render header', () => {
 		render(<RestaurantListPage />);
 		expect(screen.getByText('List of restaurants')).toBeInTheDocument();
@@ -53,6 +53,33 @@ describe('Restaurant List Page', () => {
 		expect(axios.get).toHaveBeenCalledWith(
 			expect.stringContaining('EC4M7RF')
 		);
+	});
+
+	it('Render restaurant details', async () => {
+		axios.get.mockResolvedValue({
+			data: {
+				restaurants: [
+					{
+						id: 1,
+						name: 'Test restaurant',
+						address: {
+							city: 'London',
+							firstLine: "1 Street",
+							postalCode: "123"
+						},
+						rating: {
+							starRating: 5,
+							count: 100
+						},
+						cuisines: [{name: 'Italian'}]
+					}
+				]
+			}
+		});
+
+		render(<RestaurantListPage />);
+		expect(await screen.findByText('Test restaurant')).toBeInTheDocument();
+		expect(screen.getByText('Italian')).toBeInTheDocument();
 	});
 
 });
