@@ -29,21 +29,21 @@ function HomePage() {
 	}
 
 	return (
-		<>
-			<h1>Home page</h1>
+		<div className="search-body">
+			<h1 className="search-header">Search restaurants by postcode</h1>
+			<div className="search-bar">
+				<input
+					type="text"
+					value={searchPostcode}
+					onChange={searchHandler}
+					placeholder="Type postcode here"
+				/>
 
-			<h1>Search by postcode</h1>
-			<input
-				type="text"
-				value={searchPostcode}
-				onChange={searchHandler}
-				placeholder="Type postcode here"
-			/>
-
-			<button onClick={searchButtonHandler}>Search</button>
-
+				<button onClick={searchButtonHandler}>Search</button>
+			</div>
+			
 			{!validPostcode && <p>Please enter a valid postcode</p>}
-		</>
+		</div>
 	)
 }
 
