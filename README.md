@@ -598,11 +598,203 @@
 
 17. Please check that everything is working and if it is, congratulations, the app is officially done. Feel free to add some basic CSS to ensure that the data is displayed clearly.
 
+18. Similar to the backend, I also used a Test Driven Development approach here, where I would write tests that intentionally fail and write the logic after to pass those tests. I have stored all the tests in a seperate RestaurantListPage.test.jsx and HomePage.test.jsx file as shown below:
+	```bash
+	// RestaurantListPage.test.jsx
+
+	import { render, screen } from '@testing-library/react';
+	import { describe, it, vi } from 'vitest';
+	import '@testing-library/jest-dom';
+	import RestaurantListPage from './RestaurantListPage';
+	import axios from 'axios';
+	import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
+	vi.mock('axios' , () => ({
+		default: {
+			get: vi.fn()
+		}
+	}));
+
+	describe('Restaurant List Page', () => {
+		it('Shows loading word to test async behaviour', () => {
+			render(<RestaurantListPage />);
+			expect(screen.getByText('Loading...')).toBeInTheDocument();
+		});
+
+		it('Render restaurant names from API', async () => {
+			axios.get.mockResolvedValue({
+				data: {
+					restaurants: [
+						{ id: 1, name: 'Test restaurant'}
+					]
+				}
+			});
+			render(<RestaurantListPage />);
+			const restaurant = await screen.findByText('Test restaurant');
+			expect(restaurant).toBeInTheDocument();
+		});
+
+		it('Fetch restaurants using inputted postcode', async () => {
+			axios.get.mockResolvedValue({
+				data: { restaurants: [] }
+			});
+
+			render(
+				<MemoryRouter initialEntries={['/restaurants/EC4M7RF']}>
+					<Routes>
+						<Route path="/restaurants/:postcode" element={<RestaurantListPage />} />
+					</Routes>
+				</MemoryRouter>
+			);
+
+			await screen.findByText('Loading...');
+			expect(axios.get).toHaveBeenCalledWith(
+			expect.stringContaining('EC4M7RF')
+			);
+		});
+
+		it('Render restaurant details', async () => {
+			axios.get.mockResolvedValue({
+				data: {
+					restaurants: [
+						{
+							id: 1,
+							name: 'Test restaurant',
+							address: {
+								city: 'London',
+								firstLine: "1 Street",
+								postalCode: "123"
+							},
+							rating: {
+								starRating: 5,
+								count: 100
+							},
+							cuisines: [{name: 'Italian'}]
+						}
+					]
+				}
+			});
+
+			render(<RestaurantListPage />);
+			expect(await screen.findByText('Test restaurant')).toBeInTheDocument();
+			expect(screen.getByText('Italian')).toBeInTheDocument();
+		});
+
+		it('Display only 10 restaurants', async () => {
+			const mockRestaurants = Array.from({ length: 12 }, (_, i) => ({
+				id: 1,
+				name: `Restaurant ${i}`
+			}));
+
+			axios.get.mockResolvedValue({
+				data: { restaurants: mockRestaurants }
+			});
+
+			render(<RestaurantListPage />);
+			const restaurants = await screen.findAllByText(/Restaurant/);
+			expect(restaurants.length).toBe(10);
+		});
+	});
+	```
+
+	```bash
+	// HomePage.test.jsx
+
+	import { fireEvent, render, screen } from '@testing-library/react';
+	import { describe, it, vi } from 'vitest';
+	import '@testing-library/jest-dom';
+	import { MemoryRouter } from 'react-router-dom';
+	import HomePage from './HomePage';
+
+	const mockNavigate = vi.fn();
+
+	vi.mock('react-router-dom', async () => {
+  		const actual = await vi.importActual('react-router-dom');
+
+  	return {
+    	...actual,
+    	useNavigate: () => mockNavigate,
+  	};
+	});
+
+	describe('Home page with search function', () => {
+		it('Test input typing', () => {
+			render(
+				<MemoryRouter>
+					<HomePage />
+				</MemoryRouter>
+			);
+		
+			const input = screen.getByPlaceholderText('Type postcode here');
+			fireEvent.change(input, { target: { value: 'EC4M7RF'}});
+			expect(input.value).toBe('EC4M7RF');
+		});
+
+		it('Navigate to restaurant list page when postcode is inputed', () => {
+			render(
+				<MemoryRouter>
+					<HomePage />
+				</MemoryRouter>
+			);
+
+			const input = screen.getByPlaceholderText('Type postcode here');
+			const button = screen.getByText('Search');
+
+			fireEvent.change(input, { target: { value: 'EC4M7RF'}});
+			fireEvent.click(button);
+
+			expect(mockNavigate).toHaveBeenCalledWith('restaurants/EC4M7RF');
+		});
+
+		it('Error when postcode input is empty', () => {
+			window.alert = vi.fn();
+
+			render(
+				<MemoryRouter>
+					<HomePage />
+				</MemoryRouter>
+			);
+
+			fireEvent.click(screen.getByText('Search'));
+			expect(window.alert).toHaveBeenCalledWith('Please enter a postcode');
+		});
+
+		it('Error when invalid postcode is inputted', () => {
+			render(
+				<MemoryRouter>
+					<HomePage />
+				</MemoryRouter>
+			);
+
+			const input = screen.getByPlaceholderText('Type postcode here');
+			const button = screen.getByText('Search');
+
+			fireEvent.change(input, { target: { value: '1234 AB'}});
+			fireEvent.click(button);
+
+			expect(screen.getByText('Please enter a valid postcode')).toBeInTheDocument();
+		});
+	})
+	```
+	
+19. To run the tests above, since the relevant test dependencies have been installed earlier, the remaining thing to do is navigate to the package.json file and under "scripts", add your test script and feel free to name it to your liking:
+	```bash
+	// package.json
+
+  	"scripts": {
+    	"dev": "vite",
+    	"build": "vite build",
+    	"lint": "eslint .",
+    	"preview": "vite preview",
+    	"tests": "vitest" => ADD THIS
+  	},
+	```
+
 ### OPTIONAL: A navbar can also be created to help navigate to the home page quickly and if interested, will be outlined in the next steps.
 
-18. Create a navbar component by first creating a folder in your root folder called `components` and within that folder create a component called `Navbar.jsx`.
+20. Create a navbar component by first creating a folder in your root folder called `components` and within that folder create a component called `Navbar.jsx`.
 
-19. For a simple navbar using the company's logo, the following code should look like this:
+21. For a simple navbar using the company's logo, the following code should look like this:
     ``` bash
     // .src/components/Navbar.jsx
     // ...
@@ -628,7 +820,7 @@
     - A saved `companyLogo` is also imported for use later.
     - Under a `<nav>` tag, the `companyLogo` is used with `Link` wrapped around it with a specified path to navigate to the home page. This means that if you click the logo, it takes you to the home page.
 
-20. The last step for the navbar is to navigate back to the `App.jsx` file and import it and render it to see it on your react app. It should look like this:
+22. The last step for the navbar is to navigate back to the `App.jsx` file and import it and render it to see it on your react app. It should look like this:
     ``` bash
     // App.jsx
     // ...
@@ -650,11 +842,11 @@
     )
     ```
 ## Assumptions or things that were not clear
-- The API returns valid data in a consistent format: a restaurants array with the information we need to display
-- Users should input a valid UK postcode but later on, I decided to implement a basic postcode format validator to detect invalid formats
-- Basic error handling is sufficient for the scope of this project
-- CSS not necessarily needed but I still wanted to make it look presentable
-
+- The API returns valid data in a consistent format: a restaurants array with the information we need to display.
+- Only 10 restaurants need to be shown.
+- Users should input a valid UK postcode but later on, I decided to implement a basic postcode format validator to detect invalid formats.
+- Basic error handling is sufficient for the scope of this project.
+- CSS not necessarily needed but I still wanted to make it look presentable.
 
 ## Improvements for future development
 ### Frontend:
@@ -662,4 +854,10 @@
 	- Use a map to display the address of the restaurant since the coordinates are present in the API. This can be done by using a react map package or using Google Map's developer features.
 	- Create a sorting function where you can sort the restaurants by their name or rating for example.
 	- Make the app responsive for different devices.
+	- If needed to display all the restaurants, implement pagination and infinite scrolling for large datasets.
 ### Backend:
+	- Seperate route handling and other services into different files for better readability.
+	- Add more unit and integration tests for potential other edge cases.
+	- Improve error handling with more clear descriptions to better debug.
+	- Use a middleware (maybe Morgan) to better debug and monitor the performance of the server with logging.
+	- Introduce caching for repeated API calls to the same postcode to improve performance

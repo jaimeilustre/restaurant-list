@@ -71,6 +71,5 @@ describe('Home page with search function', () => {
 		fireEvent.click(button);
 
 		expect(screen.getByText('Please enter a valid postcode')).toBeInTheDocument();
-	})
-
+	});
 })
