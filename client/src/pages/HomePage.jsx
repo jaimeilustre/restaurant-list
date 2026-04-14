@@ -4,19 +4,25 @@ import { useNavigate } from "react-router-dom";
 function HomePage() {
 
 	const [searchPostcode, setSearchPostcode] = useState('');
+	const [validPostcode, setValidPostcode] = useState(true);
 	const navigate = useNavigate();
 
 	const searchHandler = (e) => {
 		setSearchPostcode(e.target.value);
 	}
 
+	const postcodeRegex = /^[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][A-Z]{2}$/i;
+
 	const searchButtonHandler = (e) => {
 		if (searchPostcode != "") {
-			navigate(`restaurants/${searchPostcode}`);
+			if (postcodeRegex.test(searchPostcode)) {
+				navigate(`restaurants/${searchPostcode}`);
+			} else {
+				setValidPostcode(false);
+			}
 		} else {
 			alert('Please enter a postcode');
 		}
-		
 	}
 
 	return (
@@ -32,6 +38,8 @@ function HomePage() {
 			/>
 
 			<button onClick={searchButtonHandler}>Search</button>
+
+			{!validPostcode && <p>Please enter a valid postcode</p>}
 		</>
 	)
 }
