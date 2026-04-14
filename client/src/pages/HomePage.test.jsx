@@ -1,8 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 import '@testing-library/jest-dom';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import * as router from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import HomePage from './HomePage';
 
 const mockNavigate = vi.fn();

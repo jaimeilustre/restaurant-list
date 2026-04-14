@@ -13,10 +13,6 @@ app.use(
 	})
 );
 
-app.get('/', (req, res) => {
-	res.send("Testing 1, 2, 3");
-});
-
 app.get('/restaurants/:postcode', async (req, res) => {
 	const apiUrl = process.env.API_URL;
 	const { postcode } = req.params;
