@@ -12,7 +12,7 @@ vi.mock('axios' , () => ({
 }));
 
 describe('Restaurant List Page', () => {
-	
+
 	it ('Render header', () => {
 		render(<RestaurantListPage />);
 		expect(screen.getByText('List of restaurants')).toBeInTheDocument();
@@ -80,6 +80,21 @@ describe('Restaurant List Page', () => {
 		render(<RestaurantListPage />);
 		expect(await screen.findByText('Test restaurant')).toBeInTheDocument();
 		expect(screen.getByText('Italian')).toBeInTheDocument();
+	});
+
+	it('Display only 10 restaurants', async () => {
+		const mockRestaurants = Array.from({ length: 12 }, (_, i) => ({
+			id: 1,
+			name: `Restaurant ${i}`
+		}));
+
+		axios.get.mockResolvedValue({
+			data: { restaurants: mockRestaurants }
+		});
+
+		render(<RestaurantListPage />);
+		const restaurants = await screen.findAllByText(/Restaurant/);
+		expect(restaurants.length).toBe(10);
 	});
 
 });
