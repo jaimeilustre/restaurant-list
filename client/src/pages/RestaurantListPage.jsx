@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import star from "../assets/star.svg"
 
 function RestaurantListPage() {
 
@@ -24,19 +25,29 @@ function RestaurantListPage() {
 
 	return (
 		<>
-			<h1>List of restaurants</h1>
 			{!restaurants
-			? <p>Loading...</p>
-			: restaurants.map(restaurant => (
-				<div key={restaurant.id}>
-					<h1>{restaurant.name}</h1>
-					<h2>{restaurant.cuisines?.map(c => c.name).join(', ')}</h2>
-					<h2>{restaurant.rating?.starRating} ({restaurant.rating?.count})</h2>
-					<h2>{restaurant.address?.firstLine}</h2>
-					<h2>{restaurant.address?.postalCode}</h2>
-					<h2>{restaurant.address?.city}</h2>
-				</div>
-			))
+				? <p>Loading...</p>
+				: restaurants.map(restaurant => {
+					return (
+						<div className="restaurant-card" key={restaurant.id}>
+							<div className="restaurant-info">
+								<h2>{restaurant.name}</h2>
+								<h3>{restaurant.cuisines?.map(c => c.name).join(', ')}</h3>
+								<h3>
+									<img className="rating-logo" src={star} alt="text" />
+									<span>{parseFloat(restaurant.rating?.starRating)}</span>
+								</h3>
+							</div>
+
+							<div className="restaurant-address">
+								<h3>{restaurant.address?.firstLine}</h3>
+								<h3>{restaurant.address?.postalCode}</h3>
+								<h3>{restaurant.address?.city}</h3>
+							</div>
+							
+						</div>
+					)
+				})
 			}
 		</>
 	)
