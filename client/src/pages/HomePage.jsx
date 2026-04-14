@@ -19,6 +19,9 @@ function HomePage() {
 				navigate(`restaurants/${searchPostcode}`);
 			} else {
 				setValidPostcode(false);
+				setTimeout(() => {
+					setValidPostcode(true);
+				}, 1000)
 			}
 		} else {
 			alert('Please enter a postcode');
