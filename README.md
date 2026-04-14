@@ -844,6 +844,42 @@
         </>
     )
     ```
+
+23. Lastly, rather than have two seperate terminals to run the server and frontend, you can install `concurrently`, which allows you run both of these in one terminal with one command. Make sure you navigate back to the root of this repository and then install it:
+	```bash
+
+	cd ..
+	npm install -D concurrently
+	```
+
+24. Navigate to the root `package.json` file and add this to it (if file does not exist, do: `npm init -y`):
+	```bash
+	// package.json
+
+	{
+  	"scripts": {
+    	"dev": "concurrently -n SERVER,CLIENT -c green,blue \"npm run dev --prefix server\" \"npm run dev 	--prefix client\""
+  	}
+	}
+	```
+
+25. Then, navigate to the `server/package.json` file and add this to the `"scripts"`:
+	```bash
+	// server/package.json
+
+	{
+  		"scripts": {
+    		"dev": "nodemon server.js" // or "node server.js" if not using nodemon
+  		}
+	}
+	```
+
+26. Now, you can run both the server and frontend in one terminal with one command from the root:
+	```bash
+
+	npm run dev
+	```
+
 ## Assumptions or things that were not clear
 - The API returns valid data in a consistent format: a restaurants array with the information we need to display.
 - Only 10 restaurants need to be shown.
