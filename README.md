@@ -66,7 +66,7 @@
 ## Steps to build and compile the web application
 
 ## Let's start with the backend
-1. Once you created your git repository, create a server directory and navigate into it:
+1. Once you created your git repository, create a `server` directory and navigate into it:
 	``` bash
 
     mkdir server
@@ -102,7 +102,7 @@
   	"main": "server.js",
 	```
 
-6. Create an app.js file and import the dependencies you previously installed
+6. Create an `app.js` file and import the dependencies you previously installed
 	``` bash
 	// app.js
 
@@ -132,8 +132,10 @@
     ```
 9. Once everything is working, proceed with the app with all the requirements you need to satisfy. In this case, we need to bypass the CORS restrictions from the public API.
 
-10. Create a seperate server.js file to seperate the logic from running the server and move the PORT and listening log to it:
+10. Create a seperate `server.js` file to seperate the logic from running the server and move the PORT and listening log to it:
 	``` bash
+	// server.js
+
 	import app from './app.js';
 	import dotenv from 'dotenv';
 
@@ -240,7 +242,7 @@
     - The API URL is then constructed to query restaurant data based on the postcode using the Just Eat API
     - Using axios, it then makes a `GET` request. If successful, the client then receives a JSON response from the API. If not susccessful, it logs the error and sends a 500 status with a JSON response indicating an error.
 
-16. With this project, I decided to use a Test Driven Development approach, where I would write tests that intentionally fail and write the logic after to pass those tests. I have stored all the tests in a seperate app.test.js file as shown below:
+16. With this project, I decided to use a Test Driven Development approach, where I would write tests that intentionally fail and write the logic after to pass those tests. I have stored all the tests in a seperate `app.test.js file` as shown below:
 	```bash
 	// app.test.js
 
@@ -286,7 +288,7 @@
 	});
 	```
 
-17. To run the tests above, since the relevant test dependencies have been installed earlier, the remaining thing to do is navigate to the package.json file and under "scripts", add your test script and feel free to name it to your liking:
+17. To run the tests above, since the relevant test dependencies have been installed earlier, the remaining thing to do is navigate to the `package.json` file and under `"scripts"`, add your test script and feel free to name it to your liking:
 	```bash
 	// package.json
 
@@ -298,7 +300,7 @@
 
 ## Now let's move to the frontend.
 
-1. Go back to the root of the repository and now create a client directory and navigate into it:
+1. Go back to the root of the repository and now create a `client` directory and navigate into it:
 	```bash
 	
 	mkdir client
@@ -320,6 +322,7 @@
 
 	npm install
 	npm install axios react-router-dom
+	npm install --save-dev @testing-library/react @testing-library/dom @testing-library/jest-dom
 	```
 
 4. To see the default created React app, run the following command:
@@ -361,7 +364,7 @@
     export default RestaurantListPage
     ```
     ``` bash
-    // .src/pages/RestaurantListPage.jsx
+    // .src/pages/HomePage.jsx
     // ...
 
     function HomePage() {
@@ -592,13 +595,13 @@
         - `type` specifies the type of input. In this case, it would be `"text"`.
         - `value` specifies the input itself. In this case, it would be our state variable `searchPostcode`.
         - `onChange` specifies the function that is called when the input changes. In this case, as mentioned in the previous step, it would be our `searchHandler` function.
-        - `placeholder` specifies a piece of text you see in the search bar to help you. In this case, it would be `"Type postcode here..."`.
+        - `placeholder` specifies a piece of text you see in the search bar to help you. In this case, it would be `"Type postcode here"`.
     - A button is then created with `searchButtonHandler` as our event handler in the `onClick`.
     - Lastly, as mentioned previously, when the state variable `validPostcode` is set to false, a brief message pops up for one second to remind you to enter a valid UK postcode.
 
 17. Please check that everything is working and if it is, congratulations, the app is officially done. Feel free to add some basic CSS to ensure that the data is displayed clearly.
 
-18. Similar to the backend, I also used a Test Driven Development approach here, where I would write tests that intentionally fail and write the logic after to pass those tests. I have stored all the tests in a seperate RestaurantListPage.test.jsx and HomePage.test.jsx file as shown below:
+18. Similar to the backend, I also used a Test Driven Development approach here, where I would write tests that intentionally fail and write the logic after to pass those tests. I have stored all the tests in a seperate `RestaurantListPage.test.jsx` and `HomePage.test.jsx` file as shown below:
 	```bash
 	// RestaurantListPage.test.jsx
 
@@ -777,7 +780,7 @@
 	})
 	```
 	
-19. To run the tests above, since the relevant test dependencies have been installed earlier, the remaining thing to do is navigate to the package.json file and under "scripts", add your test script and feel free to name it to your liking:
+19. To run the tests above, since the relevant test dependencies have been installed earlier, the remaining thing to do is navigate to the `package.json` file and under `"scripts"`, add your test script and feel free to name it to your liking:
 	```bash
 	// package.json
 
