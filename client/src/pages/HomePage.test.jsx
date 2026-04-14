@@ -48,7 +48,19 @@ describe('Home page with search function', () => {
 		fireEvent.click(button);
 
 		expect(mockNavigate).toHaveBeenCalledWith('restaurants/EC4M7RF');
-	})
+	});
 
+	it ('Error when postcode input is empty', () => {
+		window.alert = vi.fn();
+
+		render(
+			<MemoryRouter>
+				<HomePage />
+			</MemoryRouter>
+		);
+
+		fireEvent.click(screen.getByText('Search'));
+		expect(window.alert).toHaveBeenCalledWith('Please enter a postcode');
+	});
 
 })
