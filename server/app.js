@@ -9,7 +9,7 @@ const FRONTEND_URL = "http://localhost:5173"; // Change later when deployed
 // For testing later once frontend is setup
 app.use(
 	cors({
-		origin: [FRONTEND_URL]
+		origin: FRONTEND_URL,
 	})
 );
 
@@ -18,16 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/restaurants/:postcode', async (req, res) => {
-	// res.status(200).json({
-	// 	restaurants: [{name: "Test"}]
-	// });
-	// const apiUrl = "https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/";
-	// const { postcode } = req.params;
-	
-	// const response = await axios.get(`${apiUrl}${postcode}`);
-	// res.json(response.data);
-
-	const apiUrl = "https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/";
+	const apiUrl = process.env.API_URL;
 	const { postcode } = req.params;
 	
 	try {
@@ -37,6 +28,5 @@ app.get('/restaurants/:postcode', async (req, res) => {
 		res.status(500).json({ message: "Error getting postcode" });
 	}
 })
-
 
 export default app;
