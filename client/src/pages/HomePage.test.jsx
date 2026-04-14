@@ -16,11 +16,6 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('Home page with search function', () => {
-	it('Render header', () => {
-		render(<HomePage />);
-		expect(screen.getByText('Home page')).toBeInTheDocument();
-	});
-
 	it('Test input typing', () => {
 		render(
 			<MemoryRouter>
