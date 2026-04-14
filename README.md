@@ -18,7 +18,7 @@
     npm install // to install dependencies needed for this project
     code .
     ```
-3. Navigate to the server/ directory and run npm install again to install relevant dependencies for the backend.
+3. Navigate to the `server` directory and run npm install again to install relevant dependencies for the backend.
   	``` bash
 
     cd server
@@ -32,13 +32,13 @@
     FRONTEND_URL=http://localhost:5173 // we will be using Vite later to build the foundation of the frontend so the default port is 5173
 	API_URL = "https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/"
     ```
-4. Once done, do the same in the client/ directory:
+4. Once done, do the same in the `client` directory:
     ``` bash
 
     cd ../client
 	npm install
     ```
-5. For the `.env` file in the client/ directory, add the backend URL for the frontend to access:
+5. For the `.env` file in the `client` directory, add the backend URL for the frontend to access:
 	``` bash
     // .env
 
@@ -53,7 +53,7 @@
    
    localhost:5173
 
-7. Should for example it complains that nodemon cannot be found, navigate to the package.json file in the server/ directory and change the script to run node instead:
+7. Should for example it complains that nodemon cannot be found, navigate to the `package.json` file in the `server` directory and change the script to run node instead:
 	``` bash
 	// server/package.json
 
