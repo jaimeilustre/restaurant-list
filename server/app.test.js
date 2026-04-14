@@ -4,7 +4,6 @@ import { describe, it, expect, vi } from 'vitest';
 import axios from 'axios';
 
 vi.mock('axios' , () => ({
-	// method: vi.fn()
 	default: {
 		get: vi.fn()
 	}
@@ -39,5 +38,3 @@ describe ('GET /restaurants/:postcode', () => {
 		expect(res.body.message).toBe('Error getting postcode');
 	})
 });
-
-
