@@ -11,7 +11,12 @@ function HomePage() {
 	}
 
 	const searchButtonHandler = (e) => {
-		navigate(`restaurants/${searchPostcode}`);
+		if (searchPostcode != "") {
+			navigate(`restaurants/${searchPostcode}`);
+		} else {
+			alert('Please enter a postcode');
+		}
+		
 	}
 
 	return (
