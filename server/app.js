@@ -1,15 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
-const FRONTEND_URL = "http://localhost:5173"; // Change later when deployed
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
-// For testing later once frontend is setup
 app.use(
 	cors({
-		origin: FRONTEND_URL,
+		origin: [FRONTEND_URL],
 	})
 );
 
