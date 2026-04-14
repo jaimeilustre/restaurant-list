@@ -227,12 +227,18 @@
     
     app.get('/restaurants/:postcode', async (req, res) => {
 		const apiUrl = process.env.API_URL;
+
+		if (!apiUrl) {
+  			throw new Error("API_URL is not set");
+		};
+
 		const { postcode } = req.params;
 	
 		try {
 			const response = await axios.get(`${apiUrl}${postcode}`);
 			res.json(response.data);
 		} catch (err) {
+			console.error(err.message);
 			res.status(500).json({ message: "Error getting postcode" });
 		}
 	})
@@ -442,6 +448,10 @@
     const { postcode } = useParams(null);
 
 	const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+	if (!backendUrl) {
+  		throw new Error("VITE_BACKEND_URL is not set");
+	};
 
 	const getRestaurants = async () => {
 		try {
