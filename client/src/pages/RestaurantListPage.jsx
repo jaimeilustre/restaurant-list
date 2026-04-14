@@ -11,7 +11,7 @@ function RestaurantListPage() {
 		try {
 			// const res = await axios.get('test url');
 			const res = await axios.get(`http://localhost:8080/restaurants/${postcode}`);
-			setRestaurants(res.data.restaurants);
+			setRestaurants(res.data.restaurants.slice(0, 10));
 		} catch (err) {
 			console.log(err);
 		}
