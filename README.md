@@ -295,3 +295,169 @@
 		"dev": "nodemon server.js"
   	},
 	```
+
+## Now let's move to the frontend.
+
+1. Go back to the root of the repository and now create a client directory and navigate into it:
+	```bash
+	
+	mkdir client
+	cd client
+	```
+
+2. Create a React app using Vite:
+	```bash
+	
+	npm create vite@latest
+
+	// Follow the prompts:
+	Select React
+	Selet Javascript
+	```
+
+3. Run the following command to install dependencies and additional dependencies:
+	```bash
+
+	npm install
+	npm install axios react-router-dom
+	```
+
+4. To see the default created React app, run the following command:
+	```bash
+
+	npm run dev
+	```
+
+5. Navigate to the `main.jsx` file in the root folder and import `BrowserRouter` from `react-router-dom`. Once imported, wrap it around the `App` component: It should look like this:
+    ``` bash
+    // main.jsx
+    // ...
+
+    import { BrowserRouter } from 'react-router-dom';
+
+	createRoot(document.getElementById('root')).render(
+  		<StrictMode>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+  		</StrictMode>,
+	)
+    ```
+    By doing this, we allow client-side routing within the React application, where dynamic updates can happen without having the page to fully reload.
+
+6. This completes the basic setup for the react app. From here onwards, proceed with the app with all the requirements you need. In this specific case, this is outlined in the following steps.
+
+7. In the root folder, create a new folder called `pages`. This will allow us to store pages that we create for the React app. In this case, create two pages, one called `RestaurantListPage.jsx` to display the list of restaurants by postcode, and one called `HomePage.jsx` which displays a search bar where we can type the postcode we want to search. For the initial setup of the page, you can use the following code:
+    ``` bash
+    // .src/pages/RestaurantListPage.jsx
+    // ...
+
+    function RestaurantListPage() {
+        return(
+            <h1>List of restaurants</h1>
+        )
+    }
+    
+    export default RestaurantListPage
+    ```
+    ``` bash
+    // .src/pages/RestaurantListPage.jsx
+    // ...
+
+    function HomePage() {
+        return(
+            <h1>Home Page</h1>
+        )
+    }
+    
+    export default HomePage
+    ```
+    Please note that this is done just to check if the pages are working on the browser with their respective paths for the next step.
+    
+
+8. Navigate to the `App.jsx` then import `Route` and `Routes` from `react-router-dom` to set up routes within our React app. Once imported, create the routes you need. In this case, we need two routes for the two pages we created in the previous step. The following code should look like this:
+    ``` bash
+    // App.jsx
+    // ...
+
+    import { Route, Routes } from 'react-router-dom'
+    import RestaurantListPage from './pages/RestaurantListPage'
+    import HomePage from './pages/HomePage'
+    //...
+
+    return (
+    <>
+        <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/restaurants/:postcode" element={<RestaurantListPage />} />
+        </Routes>
+    </>
+    )
+    ```
+    Note here as well both pages were also imported. Please test the pages and the paths to ensure everything is working before proceeding to the next steps.
+
+9. Create an `.env` file in the root folder and create the following environment variable:
+    ``` bash
+    // .env
+    // ...
+
+    VITE_BACKEND_URL=http://localhost:8080/restaurants/
+    ```
+    Please note that your server may be running in a different port, so feel free to adjust the port number as needed.
+
+    IMPORTANT: Add the `.env` file in the `.gitignore` file that is already present in the root folder to prevent committing this file to Git. This is what it would look like:
+    ``` bash
+    // .env
+    // ...
+
+    node_modules
+    dist
+    dist-ssr
+    *.local
+
+    .env
+    ```
+
+10. Navigate to the `RestaurantListPage.jsx` to begin constructing the page to display the list of restaurants. First, we can begin by creating the state variable for the restaurant. This is what it would look like:
+    ``` bash
+    // .src/pages/RestaurantListPage.jsx
+    // ...
+
+    const [restaurants, setRestaurants] = useState(null)
+    ```
+
+    This does the following:
+    - This uses the `useState` hook that allows functional components to manage state.
+    - A state variable `restaurants` is declared and the function `setRestaurants` is used to update the variable.
+    - The initial state is set to null.
+
+11. Next thing to do is create the `GET` request for the restaurant data using the Express server we created to request the data from the Just Eat API. This is what it would look like:
+    ``` bash
+    // .src/pages/RestaurantListPage.jsx
+    // ...
+
+    const { postcode } = useParams(null);
+
+	const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+	const getRestaurants = async () => {
+		try {
+			const res = await axios.get(`${backendUrl}${postcode}`);
+			setRestaurants(res.data.restaurants.slice(0, 10));
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
+	useEffect(() => {
+		getRestaurants();
+	}, [])
+    ```
+    This does the following:
+    - Using `useParams`, the postcode is extracted from the URL parameters.
+    - The environment variable `VITE_API_URL` is then accessed using `import.meta.env`
+    - Using axios, it then makes a `GET` request to the API endpoint specified. If successful, then the `try` block is executed. 
+        - This block uses the function we created earlier `setRestaurants` where the parameter `response.data.restaurants` is used to update our state variable with the list of restaurants from the API response.
+        - `.slice(0, 10)` is then added at the end to select the first 10 restaurants.
+    - If not successful, then the `catch` block is executed where the error and error message is logged to the console.
+    - The `useEffect` hook is then used to optionally perform side effects. The function `getApiData` (which is whwere we saved our `GET` request) is called within this hook. The dependency array `[]` is left empty in this case, which means it will only run once after the component is mounted.
