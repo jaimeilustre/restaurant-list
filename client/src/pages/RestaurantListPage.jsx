@@ -19,7 +19,7 @@ function RestaurantListPage() {
 			const res = await axios.get(`${backendUrl}${postcode}`);
 			setRestaurants(res.data.restaurants.slice(0, 10));
 		} catch (err) {
-			console.log(err);
+			console.log(err.message);
 		}
 	}
 

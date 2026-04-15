@@ -224,6 +224,11 @@
     ``` bash
     // app.js
     // ...
+
+	import dotenv from 'dotenv';
+	dotenv.config();
+
+	// ...
     
     app.get('/restaurants/:postcode', async (req, res) => {
 		const apiUrl = process.env.API_URL;
@@ -320,7 +325,7 @@
 
 	// Follow the prompts:
 	Select React
-	Selet Javascript
+	Select Javascript
 	```
 
 3. Run the following command to install dependencies and additional dependencies:
@@ -458,7 +463,7 @@
 			const res = await axios.get(`${backendUrl}${postcode}`);
 			setRestaurants(res.data.restaurants.slice(0, 10));
 		} catch (err) {
-			console.log(err);
+			console.log(err.message);
 		}
 	}
 
